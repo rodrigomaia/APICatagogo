@@ -44,7 +44,7 @@ public class CategoriasController(IUnitOfWork unitOfWork, IMapper mapper) : Cont
 
         var categoria = mapper.Map<Categoria>(categoriaDTO);
 
-        categoriaDTO = mapper.Map<CategoriaDTO>(CategoriaRepository.Create(categoria));
+        CategoriaRepository.Create(categoria);
         unitOfWork.Commit();
 
         return new CreatedAtRouteResult("ObterCategoria",
@@ -61,7 +61,6 @@ public class CategoriasController(IUnitOfWork unitOfWork, IMapper mapper) : Cont
         
         var categoria = mapper.Map<Categoria>(categoriaDTO);
 
-        categoriaDTO = mapper.Map<CategoriaDTO>(CategoriaRepository.Update(categoria));
         unitOfWork.Commit();
         return Ok(categoriaDTO);
     }
