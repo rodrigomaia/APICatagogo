@@ -3,7 +3,7 @@ using APICatalogo.DTOs;
 using APICatalogo.Models;
 using APICatalogo.Repositories;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 
 namespace APICatalogo.Testes.Controllers;
@@ -17,21 +17,25 @@ public class CategoriasControllerTest
 
     [SetUp]
     public void Setup()
-    {
-        uow = Substitute.For<IUnitOfWork>();
+    {        
         mapper = Substitute.For<IMapper>();
-        controller = new CategoriasController(uow, mapper);
         repository = Substitute.For<ICategoriaRepository>();
+        uow = new Doubles.UnitOfWork {CategoriaRepository = repository};
+        controller = new CategoriasController(uow, mapper);
     }
 
     [Test]
     public void GetOK()
-    {   
-        IEnumerable<CategoriaDTO> categoriaDTOs= new List<CategoriaDTO>();
-        repository.GetAll().Returns(new List<Categoria>());
-        mapper.Map<IEnumerable<CategoriaDTO>>(Arg.Any<Categoria>()).Returns(categoriaDTOs);
-        var retorno = controller.Get();
+    {
+        IEnumerable<CategoriaDTO> categoriaDTOs = new List<CategoriaDTO>(){
+            new CategoriaDTO(){Nome = "Teste", ImagemUrl = "Teste"}
+        };
+        var categorias = new List<Categoria>();
 
-        Assert.That(retorno.Result, Is.EqualTo(categoriaDTOs));
+        repository.GetAll().Returns(categorias);
+        mapper.Map<IEnumerable<CategoriaDTO>>(categorias).Returns(categoriaDTOs);
+        var retorno = controller.Get().Result as OkObjectResult;
+
+        Assert.That(retorno!.Value, Is.EqualTo(categoriaDTOs));
     }
 }
