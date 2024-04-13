@@ -33,7 +33,7 @@ public class CategoriasController(IUnitOfWork unitOfWork, IMapper mapper) : Cont
 
         var categoriaDTO = mapper.Map<CategoriaDTO>(categoria);
 
-        return Ok(categoria);
+        return Ok(categoriaDTO);
     }
 
     [HttpPost]
@@ -60,7 +60,8 @@ public class CategoriasController(IUnitOfWork unitOfWork, IMapper mapper) : Cont
         }
         
         var categoria = mapper.Map<Categoria>(categoriaDTO);
-
+        
+        CategoriaRepository.Update(categoria);
         unitOfWork.Commit();
         return Ok(categoriaDTO);
     }

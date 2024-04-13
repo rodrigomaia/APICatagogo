@@ -33,7 +33,7 @@ public class ProdutosController(IUnitOfWork unitOfWork, IMapper mapper) : Contro
         {
             return NotFound("Produto não encontrado...");
         }
-        return mapper.Map<ProdutoDTO>(produto);
+        return Ok(mapper.Map<ProdutoDTO>(produto));
     }
 
     [HttpPost]
